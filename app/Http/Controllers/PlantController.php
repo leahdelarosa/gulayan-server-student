@@ -64,19 +64,15 @@ class PlantController extends Controller
             'data' => $plant
         ]);
     }
-  /**
-   * Update the specified resource in storage.
-   */
-  public function update(Request $request, PlantModel $plantController)
-  {
-    //TODO : implement update record functionality
-  }
+ 
 
-  /**
-   * Remove the specified resource from storage.
-   */
-  public function destroy(PlantModel $plant)
-  {
-    //TODO : implement delete record functionality
-  }
+  // ✅ DELETE RECORD
+    public function destroy(PlantModel $plant)
+    {
+        $plant->delete();
+
+        return response()->json([
+            'message' => 'Plant deleted successfully'
+        ]);
+    }
 }
