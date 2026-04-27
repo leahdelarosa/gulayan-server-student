@@ -25,13 +25,22 @@ class PlantController extends Controller
         return response()->json($plants);
     }
 
-  /**
-   * Store a newly created resource in storage.
-   */
-  public function store(Request $request)
-  {
-    //TODO: implement save record functionality
-  }
+   // ✅ ADD RECORD
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'type' => 'required|string',
+            'price' => 'required|numeric'
+        ]);
+
+        $plant = PlantModel::create($request->all());
+
+        return response()->json([
+            'message' => 'Plant added successfully',
+            'data' => $plant
+        ]);
+    }
 
   /**
    * Display the specified resource.
