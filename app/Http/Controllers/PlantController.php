@@ -9,14 +9,21 @@ use Carbon\Carbon;
 
 class PlantController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   */
-  public function index()
-  {
-    //TODO : implement load all the records
-    //TODO : implement pagination when loading all the records
-  }
+// ✅ LOAD + SEARCH + PAGINATION
+    public function index(Request $request)
+    {
+        $query = PlantModel::query();
+
+        // search (para sa frontend search bar)
+        if ($request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // pagination (IMPORTANT sa frontend)
+        $plants = $query->paginate(10);
+
+        return response()->json($plants);
+    }
 
   /**
    * Store a newly created resource in storage.
