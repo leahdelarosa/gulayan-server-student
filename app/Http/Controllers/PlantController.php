@@ -9,44 +9,70 @@ use Carbon\Carbon;
 
 class PlantController extends Controller
 {
-  /**
-   * Display a listing of the resource.
-   */
-  public function index()
-  {
-    //TODO : implement load all the records
-    //TODO : implement pagination when loading all the records
-  }
+// ✅ LOAD + SEARCH + PAGINATION
+    public function index(Request $request)
+    {
+        $query = PlantModel::query();
 
-  /**
-   * Store a newly created resource in storage.
-   */
-  public function store(Request $request)
-  {
-    //TODO: implement save record functionality
-  }
+        // search (para sa frontend search bar)
+        if ($request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
 
-  /**
-   * Display the specified resource.
-   */
-  public function show(PlantModel $plantController)
-  {
-    //
-  }
+        // pagination (IMPORTANT sa frontend)
+        $plants = $query->paginate(10);
 
-  /**
-   * Update the specified resource in storage.
-   */
-  public function update(Request $request, PlantModel $plantController)
-  {
-    //TODO : implement update record functionality
-  }
+        return response()->json($plants);
+    }
 
-  /**
-   * Remove the specified resource from storage.
-   */
-  public function destroy(PlantModel $plant)
-  {
-    //TODO : implement delete record functionality
-  }
+   // ✅ ADD RECORD
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'type' => 'required|string',
+            'price' => 'required|numeric'
+        ]);
+
+        $plant = PlantModel::create($request->all());
+
+        return response()->json([
+            'message' => 'Plant added successfully',
+            'data' => $plant
+        ]);
+    }
+
+  // ✅ SHOW SINGLE (optional pero ok na meron)
+    public function show(PlantModel $plant)
+    {
+        return response()->json($plant);
+    }
+
+    // ✅ UPDATE RECORD
+    public function update(Request $request, PlantModel $plant)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'type' => 'required|string',
+            'price' => 'required|numeric'
+        ]);
+
+        $plant->update($request->all());
+
+        return response()->json([
+            'message' => 'Plant updated successfully',
+            'data' => $plant
+        ]);
+    }
+ 
+
+  // ✅ DELETE RECORD
+    public function destroy(PlantModel $plant)
+    {
+        $plant->delete();
+
+        return response()->json([
+            'message' => 'Plant deleted successfully'
+        ]);
+    }
 }
