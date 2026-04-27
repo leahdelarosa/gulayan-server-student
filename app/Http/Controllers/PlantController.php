@@ -42,14 +42,28 @@ class PlantController extends Controller
         ]);
     }
 
-  /**
-   * Display the specified resource.
-   */
-  public function show(PlantModel $plantController)
-  {
-    //
-  }
+  // ✅ SHOW SINGLE (optional pero ok na meron)
+    public function show(PlantModel $plant)
+    {
+        return response()->json($plant);
+    }
 
+    // ✅ UPDATE RECORD
+    public function update(Request $request, PlantModel $plant)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'type' => 'required|string',
+            'price' => 'required|numeric'
+        ]);
+
+        $plant->update($request->all());
+
+        return response()->json([
+            'message' => 'Plant updated successfully',
+            'data' => $plant
+        ]);
+    }
   /**
    * Update the specified resource in storage.
    */
